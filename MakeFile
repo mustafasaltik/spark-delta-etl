@@ -1,0 +1,24 @@
+# Variables
+VENV_DIR = venv
+PYTHON = python3
+PIP = $(VENV_DIR)/bin/pip
+PRE_COMMIT = $(VENV_DIR)/bin/pre-commit
+
+help:
+	@echo "Usage:"
+	@echo "  make setup			Create virtual environment and install the dependencies"
+	@echo "  make run				Run the app."
+	@echo "  make run-tests		Run the unit tests."
+
+
+# Create virtual environment and install requirements
+setup:
+	@echo "Creating virtual environment..."
+	$(PYTHON) -m venv $(VENV_DIR)
+	@echo "Upgrading pip..."
+	$(PIP) install --upgrade pip
+	$(PIP) install -r requirements.txt
+
+run: setup
+	@echo "Running the app..."
+	source $(VENV_DIR)/bin/activate && python main.py
