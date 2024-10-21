@@ -1,0 +1,8 @@
+input:
+  transactions: 'input/transactions.csv'
+  accounts: 'input/accounts.csv'
+  customers: 'input/customers.csv'
+output:
+  aggregated_data: 'output/aggregated_data'
+  enriched_transactions: 'output/enriched_transactions'
+  transaction_classification: 'output/transaction_classification'

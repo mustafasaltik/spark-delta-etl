@@ -1,0 +1,5 @@
+PyYAML==6.0.2
+pandas==2.2.3
+pyspark==3.5.3
+delta-spark==3.2.1
+pre-commit==4.0.1
