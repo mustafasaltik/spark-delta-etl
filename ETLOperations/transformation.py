@@ -34,13 +34,13 @@ class Transformation:
         return: A column expression where the specified values are replaced with None.
         """
         return when(
-            col(column_name).isNotNull() &
-            ~isnan(col(column_name)) &
-            (trim(col(column_name)) != "") &
-            (trim(col(column_name)) != "NaN") &
-            (upper(trim(col(column_name))) != "NULL") &
-            (upper(trim(col(column_name))) != "N/A"),
-            col(column_name)
+            col(column_name).isNotNull()
+            & ~isnan(col(column_name))
+            & (trim(col(column_name)) != "")
+            & (trim(col(column_name)) != "NaN")
+            & (upper(trim(col(column_name))) != "NULL")
+            & (upper(trim(col(column_name))) != "N/A"),
+            col(column_name),
         ).otherwise(None)
 
     @ErrorHandler.handle_errors
@@ -55,13 +55,19 @@ class Transformation:
         return: A cleaned DataFrame with null values dropped.
         """
         before = df.count()
-        cleaned_df = df.select(list(map(lambda c: self.to_null(c).alias(c), df.columns))).na.drop()
+        cleaned_df = df.select(
+            list(map(lambda c: self.to_null(c).alias(c), df.columns))
+        ).na.drop()
         after = cleaned_df.count()
-        logging.info(f"{before - after} row(s) removed. Row count after cleaning: {after}")
+        logging.info(
+            f"{before - after} row(s) removed. Row count after cleaning: {after}"
+        )
         return cleaned_df
 
     @ErrorHandler.handle_errors
-    def convert_to_timestamp(self, df: DataFrame, column_name: str, date_format: str) -> DataFrame:
+    def convert_to_timestamp(
+        self, df: DataFrame, column_name: str, date_format: str
+    ) -> DataFrame:
         """
         Converts a specified column to a timestamp using the given format.
 

@@ -4,3 +4,4 @@ pyspark==3.5.3
 delta-spark==3.2.1
 pre-commit==4.0.1
 coverage==7.6.2
+ruff==0.7.0

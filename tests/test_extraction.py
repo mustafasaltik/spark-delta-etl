@@ -7,10 +7,11 @@ from ETLOperations.extraction import Extraction
 
 
 class TestExtraction(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
-        cls.spark = SparkSession.builder.master("local[1]").appName("Test").getOrCreate()
+        cls.spark = (
+            SparkSession.builder.master("local[1]").appName("Test").getOrCreate()
+        )
         cls.extraction = Extraction(cls.spark)
 
     @patch("pandas.read_csv")
@@ -37,5 +38,5 @@ class TestExtraction(unittest.TestCase):
         cls.spark.stop()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -28,11 +28,16 @@ class ErrorHandler:
         param func: The function to decorate.
         return: The wrapped function with error handling.
         """
+
         def wrapper(*args, **kwargs):
             try:
                 arg_str = ", ".join([repr(arg) for arg in args])
-                kwarg_str = ", ".join([f"{key}={repr(value)}" for key, value in kwargs.items()])
-                logging.info(f"Calling {func.__name__} with args: {arg_str}, kwargs: {kwarg_str}")
+                kwarg_str = ", ".join(
+                    [f"{key}={repr(value)}" for key, value in kwargs.items()]
+                )
+                logging.info(
+                    f"Calling {func.__name__} with args: {arg_str}, kwargs: {kwarg_str}"
+                )
                 return func(*args, **kwargs)
             except FileNotFoundError as err:
                 logging.error(f"{err}, {func.__name__}, ETL1002")
