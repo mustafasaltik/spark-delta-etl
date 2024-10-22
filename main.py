@@ -4,12 +4,27 @@ import yaml
 from delta import configure_spark_with_delta_pip
 from pyspark.sql import SparkSession, Window
 from pyspark.sql.functions import col, date_format, when, sum, avg, weekofyear, row_number
+from typing import Callable
+from typing import Dict, Any
 
 from ETLOperations.extraction import Extraction
 from ETLOperations.transformation import Transformation
 
 
-def error_handler(func):
+def error_handler(func: Callable) -> Callable:
+    """
+    Decorator for handling and logging errors during function execution.
+
+    This decorator logs the arguments and keyword arguments passed to the function,
+    and catches common exceptions like FileNotFoundError and PermissionError (these are just example exceptions,
+        this is extendable with adding new exceptions with their error codes),
+    logging them with specific error codes. It raises the original exception after logging.
+
+    Error codes can be used to analyse pattern and distribution of each error in the system.
+
+    param func: The function to decorate.
+    return: The wrapped function with error handling.
+    """
     def wrapper(*args, **kwargs):
         try:
             arg_str = ", ".join([repr(arg) for arg in args])
@@ -17,20 +32,20 @@ def error_handler(func):
             logging.info(f"Calling {func.__name__} with args: {arg_str}, kwargs: {kwarg_str}")
             return func(*args, **kwargs)
         except FileNotFoundError as err:
-            logging.error(f"{err}, {func.__name__}, ETL1001")
-            raise
-        except PermissionError as err:
             logging.error(f"{err}, {func.__name__}, ETL1002")
             raise
-        except Exception as err:
+        except PermissionError as err:
             logging.error(f"{err}, {func.__name__}, ETL1003")
+            raise
+        except Exception as err:
+            logging.error(f"{err}, {func.__name__}, ETL1001")
             raise
 
     return wrapper
 
 
 @error_handler
-def load_config(config_file):
+def load_config(config_file: str) -> Dict[str, Any]:
     with open(config_file, "r") as f:
         return yaml.safe_load(f)
 
@@ -41,6 +56,21 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 @error_handler
 def main():
+    """
+    Main function for executing the ETL data pipeline.
+
+    This function performs the following steps:
+    1. Loads the configuration from a YAML file.
+    2. Sets up a Spark session with Delta Lake integration.
+    3. Executes the extraction layer to read data from CSV files.
+    4. Applies transformations for data cleaning and enrichment.
+    5. Performs data aggregation and analysis.
+    6. Saves the processed data to Delta tables for further use.
+    7. Logs each step for tracking the ETL process.
+    8. Stops the Spark session after the pipeline is completed.
+
+    return: None
+    """
     config = load_config("config.yaml")
 
     builder = (
@@ -72,7 +102,7 @@ def main():
     logging.info(f"Customers data is going to be cleaned..")
     customers_df_cleaned = transformation.drop_null_values(customers_df)
 
-    # Convert dates
+    # Date conversion
     transactions_df_cleaned = transformation\
         .convert_to_timestamp(transactions_df_cleaned, "transaction_date", "yyyy-MM-dd")\
         .withColumn("year_month", date_format(col("transaction_date"), "yyyy-MM"))
