@@ -1,6 +1,7 @@
 import logging
 import yaml
 import pandas as pd
+from ETLOperations.extract import Extract
 from delta import configure_spark_with_delta_pip
 from pyspark.sql import SparkSession, Window
 from pyspark.sql.functions import col, date_format, isnan, to_timestamp, trim, \
@@ -31,19 +32,6 @@ def error_handler(func):
 def load_config(config_file):
     with open(config_file, "r") as f:
         return yaml.safe_load(f)
-
-
-@error_handler
-def extract_from_csv(file_path, spark):
-    # Load datasets using pandas
-    pd_dataframe = pd.read_csv(file_path)
-
-    # Convert pandas DataFrames to Spark DataFrames
-    spark_dataframe = spark.createDataFrame(pd_dataframe)
-
-    logging.info(f"Data ingestion completed successfully for '{file_path}'")
-
-    return spark_dataframe
 
 
 @error_handler
@@ -106,9 +94,9 @@ def main():
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
     # Extraction Layer
-    accounts_df = extract_from_csv(config["input"]["accounts"], spark)
-    customers_df = extract_from_csv(config["input"]["customers"], spark)
-    transactions_df = extract_from_csv(config["input"]["transactions"], spark)
+    accounts_df = Extract(spark).from_csv(config["input"]["accounts"])
+    customers_df = Extract(spark).from_csv(config["input"]["customers"])
+    transactions_df = Extract(spark).from_csv(config["input"]["transactions"])
 
     # Data Cleaning
     logging.info(f"Accounts data is going to be cleaned..")
