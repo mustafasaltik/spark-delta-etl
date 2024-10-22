@@ -1,21 +1,12 @@
 import logging
-from typing import Dict, Any
 
-import yaml
 from delta import configure_spark_with_delta_pip
 from pyspark.sql import SparkSession, Window
 from pyspark.sql.functions import col, date_format, when, sum, avg, weekofyear, row_number
 
 from ETLOperations.extraction import Extraction
 from ETLOperations.transformation import Transformation
-from ETLOperations.utils import ErrorHandler
-
-
-@ErrorHandler.handle_errors
-def load_config(config_file: str) -> Dict[str, Any]:
-    with open(config_file, "r") as f:
-        return yaml.safe_load(f)
-
+from ETLOperations.utils import ErrorHandler, load_config
 
 # Set up logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

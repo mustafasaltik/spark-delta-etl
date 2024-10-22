@@ -1,5 +1,8 @@
 import logging
 from typing import Callable
+from typing import Dict, Any
+
+import yaml
 
 
 class ErrorHandler:
@@ -42,3 +45,9 @@ class ErrorHandler:
                 raise
 
         return wrapper
+
+
+@ErrorHandler.handle_errors
+def load_config(config_file: str) -> Dict[str, Any]:
+    with open(config_file, "r") as f:
+        return yaml.safe_load(f)
