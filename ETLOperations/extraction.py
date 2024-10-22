@@ -2,7 +2,7 @@ import logging
 import pandas as pd
 
 
-class Extract:
+class Extraction:
     """
     Extraction Layer Operations
     """
