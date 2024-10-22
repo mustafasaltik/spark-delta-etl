@@ -3,6 +3,7 @@ import logging
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.column import Column
 from pyspark.sql.functions import col, isnan, to_timestamp, trim, when, upper
+from ETLOperations.utils import ErrorHandler
 
 
 class Transformation:
@@ -20,6 +21,7 @@ class Transformation:
     def __init__(self, spark: SparkSession):
         self.spark = spark
 
+    @ErrorHandler.handle_errors
     def to_null(self, column_name: str) -> Column:
         """
         Replaces specific values in a column with None (null).
@@ -41,6 +43,7 @@ class Transformation:
             col(column_name)
         ).otherwise(None)
 
+    @ErrorHandler.handle_errors
     def drop_null_values(self, df: DataFrame) -> DataFrame:
         """
         Cleans the DataFrame by replacing specific values with null and dropping rows with null values.
@@ -57,6 +60,7 @@ class Transformation:
         logging.info(f"{before - after} row(s) removed. Row count after cleaning: {after}")
         return cleaned_df
 
+    @ErrorHandler.handle_errors
     def convert_to_timestamp(self, df: DataFrame, column_name: str, date_format: str) -> DataFrame:
         """
         Converts a specified column to a timestamp using the given format.

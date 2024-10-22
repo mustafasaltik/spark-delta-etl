@@ -2,7 +2,7 @@ import logging
 import pandas as pd
 
 from pyspark.sql import DataFrame, SparkSession
-
+from ETLOperations.utils import ErrorHandler
 
 class Extraction:
     """
@@ -19,6 +19,7 @@ class Extraction:
     def __init__(self, spark: SparkSession):
         self.spark = spark
 
+    @ErrorHandler.handle_errors
     def from_csv(self, file_path: str) -> DataFrame:
         """
         Loads a CSV file into a Spark DataFrame.
