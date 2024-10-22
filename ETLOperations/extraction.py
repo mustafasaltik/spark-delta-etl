@@ -32,14 +32,11 @@ class Extraction:
         return: A Spark DataFrame containing the loaded data.
         raises Exception: If the data ingestion process fails, an exception is logged and raised.
         """
-        try:
-            # Load datasets using pandas
-            pd_dataframe = pd.read_csv(file_path)
-            # Convert pandas DataFrames to Spark DataFrames
-            spark_dataframe = self.spark.createDataFrame(pd_dataframe)
-            logging.info(f"Extraction completed successfully for '{file_path}'")
 
-            return spark_dataframe
-        except Exception:
-            logging.error("Data ingestion failed", exc_info=True)
-            raise
+        # Load datasets using pandas
+        pd_dataframe = pd.read_csv(file_path)
+        # Convert pandas DataFrames to Spark DataFrames
+        spark_dataframe = self.spark.createDataFrame(pd_dataframe)
+        logging.info(f"Extraction completed successfully for '{file_path}'")
+
+        return spark_dataframe

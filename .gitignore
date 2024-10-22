@@ -3,3 +3,5 @@
 output
 venv
 ETLOperations/__pycache__/*
+__pycache__/
+.coverage
