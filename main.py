@@ -164,7 +164,7 @@ def main():
         .groupBy("transaction_classification", "week_of_year").count()
 
     trx_numbers_per_classification_per_week.write.format("delta").mode("overwrite")\
-        .save(config["output"]["enriched_transactions"] + "/trx_numbers_per_classification_per_week")
+        .save(config["output"]["enriched_transactions"] + "/trx_numbers_per_classification_week")
 
     # Transactions with the largest amount per classification
     window_spec = Window.partitionBy("transaction_classification").orderBy(
