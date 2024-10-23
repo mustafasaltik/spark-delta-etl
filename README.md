@@ -10,6 +10,7 @@
 - [Testing and Test Coverage](#testing-and-test-coverage)
 - [Code Styling](#code-styling)
 - [Error Handling](#error-handling)
+- [Next Steps](#next-steps)
 
 
 ## Project Overview
