@@ -77,11 +77,44 @@ It will;
 
 <img src="assets/make-run-test.png" width="350" height="50" alt="Image description">
 
+Once you run the tests, you can see the report; 
+
+1. From the terminal like below:
+
+<img src="assets/test-coverage-terminal.png" width="250" height="100" alt="Image description">
+
+2. From the browser with opening ```htmlcov/index.html``` like below:
+
+<img src="assets/open-coverage-report.png" width="250" height="100" alt="Image description">
+
+And it'll be available to investigate which parts have been covered by unit tests:
+
+<img src="assets/coverage-report-on-browser.png" width="450" height="200" alt="Image description">
+
+
 ## Code Styling
 - We are utilizing Ruff, and it's configured as pre-commit hooks(```.pre-commit-config.yaml```).
+- ```pre-commit run --all-files```
 
 <img src="assets/ruff-as-pre-commit-hook.png" width="400" height="50" alt="Image description">
 
 ## Error Handling
 
 We have a decorator designed to handle errors and raise exceptions with specific error codes. This is extendable strategy which we can continue to add specific exceptions and new error codes with new features in the project. It also provides additional logging mechanism to make function calls visible with its parameters.
+- Check ```ETLOperations/utils.ErrorHandler```
+
+
+## Next Steps
+
+- CI/CD
+  * Automate Unit Tests with GitHub Actions 
+    * Use GitHub Actions to run unit tests and generate test coverage reports on every code push.
+- Deployment to the Cloud for ex: Google Cloud Platform (GCP)
+    * Create a GKE Cluster on GCP. 
+    * Set up Google Cloud credentials in GitHub Actions to deploy to GKE.
+- Set Up Monitoring and Alerting
+- Separate staging and transformation layer 
+- Data modelling (fact and dimension)
+- Automated data quality checks
+- Exception handling can be improved with using more detailed error messages using custom exceptions
+- Incremental logic should be applied for both extraction and transformation layer (to not process entire data on every run)
