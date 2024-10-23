@@ -46,7 +46,8 @@ class ErrorHandler:
                 logging.error(f"{err}, {func.__name__}, ETL1003")
                 raise
             except Exception as err:
-                logging.error(f"{err}, {func.__name__}, ETL1001")
+                logging\
+                    .error(f"{err}, {func.__name__}, ETL1001")
                 raise
 
         return wrapper
